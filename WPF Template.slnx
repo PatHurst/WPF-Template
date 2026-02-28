@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WPFTemplate.App/WPFTemplate.App.csproj" />
+    <Project Path="src/WPFTemplate.Core/WPFTemplate.Core.csproj" Id="539757c2-765c-4936-9b3f-88a050203bf0" />
+    <Project Path="src/WPFTemplate.Services/WPFTemplate.Services.csproj" Id="4e36c1dc-e75a-4465-94c6-4f8a3142f242" />
+  </Folder>
+</Solution>
