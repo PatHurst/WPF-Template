@@ -1,23 +1,37 @@
-﻿using InnoJob.App.Resources.Theme;
-using InnoJob.App.Views.Windows;
+using WPFTemplate.App.Resources.Theme;
+using WPFTemplate.App.Services;
+using WPFTemplate.App.ViewModels;
+using WPFTemplate.App.ViewModels.WindowViewModels;
+using WPFTemplate.App.Views.Windows;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace InnoJob.App;
+namespace WPFTemplate.App;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
 public partial class App : Application
 {
-    public static IServiceProvider ServiceProvider { get; private set; }
+    public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
     public App()
     {
-        var services = new ServiceCollection();
-        services.AddLogging(c => c.AddFile(o => o.RootPath = Environment.ProcessPath));
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+            .Build();
 
+        var services = new ServiceCollection();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddLogging(c => c.AddFile(o => o.RootPath = Environment.ProcessPath));
+        services.AddSingleton<NavigationService>();
+        services.AddTransient<MenuViewModel>();
+        services.AddTransient<HomePageViewModel>();
+        services.AddTransient<LogPageViewModel>();
+        services.AddTransient<MainWindowViewModel>();
         ServiceProvider = services.BuildServiceProvider();
     }
 
@@ -34,7 +48,9 @@ public partial class App : Application
 
         await Task.Delay(2_000);
 
-        var mainWindow = new MainWindow();
+        ServiceProvider.GetRequiredService<NavigationService>().NavigateTo<HomePageViewModel>();
+
+        var mainWindow = new MainWindow(ServiceProvider.GetRequiredService<MainWindowViewModel>());
         MainWindow = mainWindow;
         mainWindow.Show();
         splash.Close();

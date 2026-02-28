@@ -1,4 +1,4 @@
-﻿namespace InnoJob.App.Command;
+﻿namespace WPFTemplate.App.Command;
 
 /// <summary>
 /// Represents a visible command object.

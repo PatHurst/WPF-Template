@@ -1,11 +1,15 @@
-﻿using System.Timers;
+using System.Timers;
+using WPFTemplate.App.Services;
+using WPFTemplate.App.ViewModels;
 
-namespace InnoJob.App.ViewModels.WindowViewModels;
+namespace WPFTemplate.App.ViewModels.WindowViewModels;
 
 internal class MainWindowViewModel : ObservableObject
 {
-    MainWindowViewModel()
+    public MainWindowViewModel(MenuViewModel menu, NavigationService navigation)
     {
+        Menu = menu;
+        Navigation = navigation;
         StatusText = string.Empty;
 
         var timer = new System.Timers.Timer()
@@ -16,6 +20,9 @@ internal class MainWindowViewModel : ObservableObject
         };
         timer.Elapsed += (_, e) => StatusText = e.SignalTime.ToLocalTime().ToString();
     }
+
+    public MenuViewModel Menu { get; }
+    public NavigationService Navigation { get; }
 
     public string StatusText
     {

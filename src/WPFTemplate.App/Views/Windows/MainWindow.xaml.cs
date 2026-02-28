@@ -1,14 +1,15 @@
-﻿using System.Windows;
+using WPFTemplate.App.ViewModels.WindowViewModels;
 
-namespace InnoJob.App.Views.Windows;
+namespace WPFTemplate.App.Views.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    internal MainWindow(MainWindowViewModel vm)
     {
         InitializeComponent();
+        DataContext = vm;
     }
 }

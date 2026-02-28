@@ -1,8 +1,8 @@
-﻿using InnoJob.App.Command;
-using InnoJob.App.Resources.Theme;
+﻿using WPFTemplate.App.Command;
+using WPFTemplate.App.Resources.Theme;
 using System.Windows.Shapes;
 
-namespace InnoJob.App.ViewModels;
+namespace WPFTemplate.App.ViewModels;
 
 internal class MenuViewModel
 {

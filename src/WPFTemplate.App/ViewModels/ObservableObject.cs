@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace InnoJob.App.ViewModels;
+namespace WPFTemplate.App.ViewModels;
 
 /// <summary>
 /// Base class for objects that supply UI data.
@@ -18,9 +18,8 @@ internal abstract class ObservableObject : INotifyPropertyChanged
     /// <param name="value">The new value.</param>
     /// <param name="property">The property name. Automatically filled by <see cref="CallerMemberNameAttribute"/></param>
     protected void SetProperty<T>(ref T field, T value, [CallerMemberName] string property = "")
-        where T : IComparable<T>
     {
-        if (field?.CompareTo(value) == 0)
+        if (EqualityComparer<T>.Default.Equals(field, value))
             return;
 
         field = value;

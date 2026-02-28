@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace InnoJob.App.Views.Windows;
+namespace WPFTemplate.App.Views.Windows;
 /// <summary>
 /// Interaction logic for SplashScreen.xaml
 /// </summary>

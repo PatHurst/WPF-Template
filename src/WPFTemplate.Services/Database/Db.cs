@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 using static LanguageExt.Prelude;
 
-namespace InnoJob.Services.Database;
+namespace WPFTemplate.Services.Database;
 
 /// <summary>
 /// Core database infrastructure providing connection and transaction management

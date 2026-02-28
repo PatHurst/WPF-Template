@@ -1,62 +1,68 @@
-﻿using Microsoft.Win32;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public static class Settings
 {
-    private static readonly string _keyName = @"HKEY_CURRENT_USER\SOFTWARE\InnoJob";
+    private static readonly string _settingsDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "WPFTemplate");
+
+    private static readonly string _settingsFile = Path.Combine(_settingsDir, "appsettings.json");
+
+    private static SettingsData _data = Load();
 
     public static int AppTheme
     {
-        get => GetRegistryValue(nameof(AppTheme), 0);
-        set => SetRegistryValue(nameof(AppTheme), value);
+        get => _data.AppTheme;
+        set { _data.AppTheme = value; Save(); }
     }
 
     public static int AccentColor
     {
-        get => GetRegistryValue(nameof(AccentColor), 0);
-        set => SetRegistryValue(nameof(AccentColor), value);
+        get => _data.AccentColor;
+        set { _data.AccentColor = value; Save(); }
     }
 
     public static string FontFamily
     {
-        get => GetRegistryValue(nameof(FontFamily), string.Empty);
-        set => SetRegistryValue<string>(nameof(FontFamily), value);
+        get => _data.FontFamily;
+        set { _data.FontFamily = value; Save(); }
     }
 
-    private static T GetRegistryValue<T>(string valueName, T defaultValue)
+    private static SettingsData Load()
     {
         try
         {
-            var read = Registry.GetValue(_keyName, valueName, null);
-
-            if (read is T result)
-                return result;
-
-            // Value missing — persist the default and return it
-            SetRegistryValue(valueName, defaultValue);
-            return defaultValue;
-        }
-        catch
-        {
-            return defaultValue;
-        }
-    }
-
-    private static void SetRegistryValue<T>(string valueName, T value)
-    {
-        try
-        {
-            switch (value)
+            if (File.Exists(_settingsFile))
             {
-                case int:
-                case byte:
-                case short:
-                    Registry.SetValue(_keyName, valueName, value!, RegistryValueKind.DWord);
-                    break;
-                default:
-                    Registry.SetValue(_keyName, valueName, value!, RegistryValueKind.String);
-                    break;
+                var json = File.ReadAllText(_settingsFile);
+                return JsonSerializer.Deserialize<SettingsData>(json) ?? new SettingsData();
             }
         }
         catch { }
+        return new SettingsData();
+    }
+
+    private static void Save()
+    {
+        try
+        {
+            Directory.CreateDirectory(_settingsDir);
+            var json = JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_settingsFile, json);
+        }
+        catch { }
+    }
+
+    private sealed class SettingsData
+    {
+        [JsonPropertyName("appTheme")]
+        public int AppTheme { get; set; }
+
+        [JsonPropertyName("accentColor")]
+        public int AccentColor { get; set; }
+
+        [JsonPropertyName("fontFamily")]
+        public string FontFamily { get; set; } = string.Empty;
     }
 }

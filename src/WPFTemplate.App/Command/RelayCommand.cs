@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
 
-namespace InnoJob.App.Command;
+namespace WPFTemplate.App.Command;
 
 internal class RelayCommand : ICommand
 {

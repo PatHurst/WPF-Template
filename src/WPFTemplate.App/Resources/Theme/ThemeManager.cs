@@ -1,8 +1,8 @@
 using System.Windows.Media;
 
-using InnoJob.Core;
+using WPFTemplate.Core;
 
-namespace InnoJob.App.Resources.Theme;
+namespace WPFTemplate.App.Resources.Theme;
 
 /// <summary>
 /// Runtime theme management: dark/light theme, accent color, and UI font.

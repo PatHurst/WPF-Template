@@ -4,12 +4,11 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <AssemblyName>InnoJob.Services</AssemblyName>
-	  <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-	  <SignAssembly>True</SignAssembly>
-	  <Title>InnovaTech Job Manager Services</Title>
-	  <Version>0.0.0</Version>
-	  <Company>InnovaTech</Company>
+    <AssemblyName>WPFTemplate.Services</AssemblyName>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <Title>WPFTemplate Services</Title>
+    <Version>0.0.0</Version>
+    <Company>WPFTemplate</Company>
   </PropertyGroup>
 
   <ItemGroup>

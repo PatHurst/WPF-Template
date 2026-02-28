@@ -1,4 +1,4 @@
-﻿namespace InnoJob.Core.Functions;
+﻿namespace WPFTemplate.Core.Functions;
 
 public partial class Functions
 {
