@@ -12,9 +12,8 @@ namespace WPFTemplate.App.Services;
 internal class NavigationService : INotifyPropertyChanged
 {
     private readonly IServiceProvider _services;
-    private object? _currentView;
 
-    internal NavigationService(IServiceProvider services)
+    public NavigationService(IServiceProvider services)
     {
         _services = services;
     }
@@ -26,11 +25,12 @@ internal class NavigationService : INotifyPropertyChanged
     /// </summary>
     public object? CurrentView
     {
-        get => _currentView;
+        get => field;
         private set
         {
-            if (_currentView == value) return;
-            _currentView = value;
+            if (field == value)
+                return;
+            field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentView)));
         }
     }

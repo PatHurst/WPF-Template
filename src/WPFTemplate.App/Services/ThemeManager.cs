@@ -2,7 +2,7 @@ using System.Windows.Media;
 
 using WPFTemplate.Core;
 
-namespace WPFTemplate.App.Resources.Theme;
+namespace WPFTemplate.App.Services;
 
 /// <summary>
 /// Runtime theme management: dark/light theme, accent color, and UI font.

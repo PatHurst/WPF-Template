@@ -1,8 +1,9 @@
-<Application
+
+    <Application
     x:Class="WPFTemplate.App.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="clr-namespace:WPFTemplate.App.ViewModels"
+    xmlns:vmPages="clr-namespace:WPFTemplate.App.ViewModels.Pages"
     xmlns:pages="clr-namespace:WPFTemplate.App.Views.Pages"
     Exit="Application_Exit"
     Startup="Application_Startup">
@@ -10,10 +11,10 @@
         <ResourceDictionary>
 
             <!--  Page → View mappings for ViewModel-first navigation  -->
-            <DataTemplate DataType="{x:Type vm:HomePageViewModel}">
+            <DataTemplate DataType="{x:Type vmPages:HomePageViewModel}">
                 <pages:HomePage />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type vm:LogPageViewModel}">
+            <DataTemplate DataType="{x:Type vmPages:LogPageViewModel}">
                 <pages:LogPage />
             </DataTemplate>
 

@@ -1,8 +1,12 @@
-using WPFTemplate.App.Resources.Theme;
+using System.Windows.Threading;
+
 using WPFTemplate.App.Services;
-using WPFTemplate.App.ViewModels;
-using WPFTemplate.App.ViewModels.WindowViewModels;
+using WPFTemplate.App.ViewModels.Pages;
+using WPFTemplate.App.ViewModels.Windows;
 using WPFTemplate.App.Views.Windows;
+using WPFTemplate.Services.Database;
+
+using Karambolo.Extensions.Logging.File;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,21 +28,32 @@ public partial class App : Application
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
             .Build();
 
-        var services = new ServiceCollection();
-        services.AddSingleton<IConfiguration>(configuration);
-        services.AddLogging(c => c.AddFile(o => o.RootPath = Environment.ProcessPath));
-        services.AddSingleton<NavigationService>();
-        services.AddTransient<MenuViewModel>();
-        services.AddTransient<HomePageViewModel>();
-        services.AddTransient<LogPageViewModel>();
-        services.AddTransient<MainWindowViewModel>();
-        ServiceProvider = services.BuildServiceProvider();
+        ServiceProvider = new ServiceCollection()
+            .AddSingleton<IConfiguration>(configuration)
+            .AddLogging(c => c.AddFile(o =>
+            {
+                o.RootPath = AppContext.BaseDirectory;
+                o.Files = [new LogFileOptions { Path = "app.log" }];
+            }))
+            .AddSingleton<NavigationService>()
+            .AddTransient<MenuViewModel>()
+            .AddTransient<HomePageViewModel>()
+            .AddTransient<LogPageViewModel>()
+            .AddTransient<MainWindowViewModel>()
+            .BuildServiceProvider();
+
+        DispatcherUnhandledException += OnDispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
     private async void Application_Startup(object sender, StartupEventArgs e)
     {
+        var connStr = ServiceProvider.GetRequiredService<IConfiguration>()["Database:ConnectionString"];
+        if (!string.IsNullOrWhiteSpace(connStr))
+            Db.Configure(connStr);
+
         InitializeTheme();
-        _ = InitializeWindows();
+        await InitializeWindows();
     }
 
     private async Task InitializeWindows()
@@ -58,7 +73,7 @@ public partial class App : Application
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
-
+        (ServiceProvider as IDisposable)?.Dispose();
     }
 
     private void InitializeTheme()
@@ -67,5 +82,30 @@ public partial class App : Application
 
         var (r, g, b) = IntToRgb(Settings.AccentColor);
         ThemeManager.SetAccentColor(Color.FromRgb(r, g, b));
+    }
+
+    private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        LogAndShow(e.Exception);
+        e.Handled = true;
+        Shutdown(1);
+    }
+
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        if (e.ExceptionObject is Exception ex)
+            LogAndShow(ex);
+    }
+
+    private void LogAndShow(Exception ex)
+    {
+        try { ServiceProvider.GetService<ILogger<App>>()?.LogCritical(ex, "Unhandled exception"); }
+        catch { }
+
+        MessageBox.Show(
+            $"An unexpected error occurred:\n\n{ex.Message}",
+            "Unexpected Error",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
     }
 }

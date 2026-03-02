@@ -1,8 +1,9 @@
-using System.Timers;
-using WPFTemplate.App.Services;
-using WPFTemplate.App.ViewModels;
+using System.Windows.Threading;
 
-namespace WPFTemplate.App.ViewModels.WindowViewModels;
+using WPFTemplate.App.Services;
+using WPFTemplate.App.ViewModels.Base;
+
+namespace WPFTemplate.App.ViewModels.Windows;
 
 internal class MainWindowViewModel : ObservableObject
 {
@@ -12,13 +13,9 @@ internal class MainWindowViewModel : ObservableObject
         Navigation = navigation;
         StatusText = string.Empty;
 
-        var timer = new System.Timers.Timer()
-        {
-            AutoReset = true,
-            Interval = 1_000,
-            Enabled = true
-        };
-        timer.Elapsed += (_, e) => StatusText = e.SignalTime.ToLocalTime().ToString();
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+        timer.Tick += (_, _) => StatusText = DateTime.Now.ToString();
+        timer.Start();
     }
 
     public MenuViewModel Menu { get; }

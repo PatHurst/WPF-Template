@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace WPFTemplate.App.ViewModels;
+namespace WPFTemplate.App.ViewModels.Base;
 
 /// <summary>
 /// Base class for objects that supply UI data.

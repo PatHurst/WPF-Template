@@ -1,8 +1,10 @@
 using Microsoft.Extensions.Logging;
+
 using WPFTemplate.App.Command;
 using WPFTemplate.App.Services;
+using WPFTemplate.App.ViewModels.Base;
 
-namespace WPFTemplate.App.ViewModels;
+namespace WPFTemplate.App.ViewModels.Pages;
 
 internal class LogPageViewModel : ObservableObject
 {

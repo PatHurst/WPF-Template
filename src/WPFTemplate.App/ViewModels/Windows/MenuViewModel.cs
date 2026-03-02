@@ -1,8 +1,9 @@
-﻿using WPFTemplate.App.Command;
-using WPFTemplate.App.Resources.Theme;
 using System.Windows.Shapes;
 
-namespace WPFTemplate.App.ViewModels;
+using WPFTemplate.App.Command;
+using WPFTemplate.App.Services;
+
+namespace WPFTemplate.App.ViewModels.Windows;
 
 internal class MenuViewModel
 {

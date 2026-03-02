@@ -1,4 +1,4 @@
-using WPFTemplate.App.ViewModels.WindowViewModels;
+using WPFTemplate.App.ViewModels.Windows;
 
 namespace WPFTemplate.App.Views.Windows;
 
