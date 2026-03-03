@@ -6,3 +6,6 @@ global using System.Windows;
 global using System.Windows.Input;
 
 global using static WPFTemplate.Core.Functions.Functions;
+
+global using LanguageExt;
+global using static LanguageExt.Prelude;

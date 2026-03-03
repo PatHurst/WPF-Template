@@ -63,7 +63,6 @@
     <SolidColorBrush x:Key="TextPrimary" Color="#E2E2E2" />
     <SolidColorBrush x:Key="TextSecondary" Color="#AAAAAA" />
     <SolidColorBrush x:Key="TextDisabled" Color="#555555" />
-    <SolidColorBrush x:Key="TextOnAccent" Color="#FFFFFF" />
 
     <!--  Controls  -->
     <SolidColorBrush x:Key="ControlBackground" Color="#383838" />
@@ -96,7 +95,10 @@
     <!--  Overlay / Modal  -->
     <SolidColorBrush x:Key="OverlayBackground" Color="#80000000" />
 
-    <!--  Focus ring  -->
-    <SolidColorBrush x:Key="FocusBorder" Color="#5090D0" />
+
+    <!-- Corner radii -->
+    <CornerRadius x:Key="CornerSmall">2</CornerRadius>
+    <CornerRadius x:Key="CornerNormal">3</CornerRadius>
+    <CornerRadius x:Key="CornerLarge">4</CornerRadius>
 
 </ResourceDictionary>

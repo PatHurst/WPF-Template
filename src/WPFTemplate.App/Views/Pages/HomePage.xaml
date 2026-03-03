@@ -5,14 +5,98 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock
-            HorizontalAlignment="Center"
-            Margin="0,0,0,16"
-            Text="Welcome to WPFTemplate" />
-        <Button
-            HorizontalAlignment="Center"
-            Command="{Binding GoToLogPageCommand}"
-            Content="Open Log Demo →" />
-    </StackPanel>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel
+            MaxWidth="560"
+            Margin="40,36,40,40"
+            HorizontalAlignment="Center">
+
+            <TextBlock
+                Margin="0,0,0,28"
+                FontSize="{StaticResource FontSizeLarge}"
+                Text="Control Gallery" />
+
+            <!--  Buttons  -->
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="11"
+                Foreground="{DynamicResource GroupHeaderForeground}"
+                Text="BUTTONS" />
+            <WrapPanel Margin="0,0,0,28">
+                <Button Margin="0,0,8,8" Content="Button" />
+                <Button
+                    Margin="0,0,8,8"
+                    Content="Disabled"
+                    IsEnabled="False" />
+            </WrapPanel>
+
+            <!--  Text input  -->
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="11"
+                Foreground="{DynamicResource GroupHeaderForeground}"
+                Text="INPUT" />
+            <TextBox Margin="0,0,0,8" Text="Sample input text" />
+            <TextBox
+                Margin="0,0,0,8"
+                IsReadOnly="True"
+                Text="Read-only field" />
+            <PasswordBox Margin="0,0,0,28" Password="password" />
+
+            <!--  Check & radio  -->
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="11"
+                Foreground="{DynamicResource GroupHeaderForeground}"
+                Text="SELECTION" />
+            <StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+                <CheckBox
+                    Margin="0,0,20,0"
+                    Content="Checked"
+                    IsChecked="True" />
+                <CheckBox Margin="0,0,20,0" Content="Unchecked" />
+                <CheckBox
+                    Content="Disabled"
+                    IsChecked="True"
+                    IsEnabled="False" />
+            </StackPanel>
+            <StackPanel Margin="0,0,0,28" Orientation="Horizontal">
+                <RadioButton
+                    Margin="0,0,20,0"
+                    Content="Option A"
+                    GroupName="demo"
+                    IsChecked="True" />
+                <RadioButton
+                    Margin="0,0,20,0"
+                    Content="Option B"
+                    GroupName="demo" />
+                <RadioButton Content="Option C" GroupName="demo" />
+            </StackPanel>
+
+            <!--  Combo box  -->
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="11"
+                Foreground="{DynamicResource GroupHeaderForeground}"
+                Text="COMBO BOX" />
+            <ComboBox
+                Width="220"
+                Margin="0,0,0,28"
+                HorizontalAlignment="Left"
+                SelectedIndex="0">
+                <ComboBoxItem Content="Selection One" />
+                <ComboBoxItem Content="Selection Two" />
+                <ComboBoxItem Content="Selection Three" />
+            </ComboBox>
+
+            <Separator Margin="0,0,0,24" />
+
+            <Button
+                HorizontalAlignment="Left"
+                Command="{Binding GoToLogPageCommand}"
+                Content="Open Log Demo →" />
+
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

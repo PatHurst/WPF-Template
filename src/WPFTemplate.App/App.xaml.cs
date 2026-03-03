@@ -52,7 +52,7 @@ public partial class App : Application
         if (!string.IsNullOrWhiteSpace(connStr))
             Db.Configure(connStr);
 
-        InitializeTheme();
+        ThemeManager.InitializeTheme();
         await InitializeWindows();
     }
 
@@ -74,14 +74,6 @@ public partial class App : Application
     private void Application_Exit(object sender, ExitEventArgs e)
     {
         (ServiceProvider as IDisposable)?.Dispose();
-    }
-
-    private void InitializeTheme()
-    {
-        ThemeManager.SetTheme((Theme)Settings.AppTheme);
-
-        var (r, g, b) = IntToRgb(Settings.AccentColor);
-        ThemeManager.SetAccentColor(Color.FromRgb(r, g, b));
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

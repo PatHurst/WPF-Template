@@ -8,7 +8,7 @@
     Title="SplashScreen"
     Width="600"
     Height="400"
-    Style="{StaticResource WindowStyle}"
+    Style="{DynamicResource WindowStyle}"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">

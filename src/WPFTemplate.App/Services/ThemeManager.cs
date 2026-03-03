@@ -1,7 +1,5 @@
 using System.Windows.Media;
 
-using WPFTemplate.Core;
-
 namespace WPFTemplate.App.Services;
 
 /// <summary>
@@ -28,6 +26,16 @@ internal static class ThemeManager
     // ─────────────────────────────────────────────────────────────────────────
 
     /// <summary>
+    /// Initializes the application with the theme and accent color saved in settings.
+    /// </summary>
+    internal static void InitializeTheme()
+    {
+        SetTheme((Theme)Settings.AppTheme);
+        RestoreAccentColor();
+        RestoreFont();
+    }
+
+    /// <summary>
     /// Switches the application between dark and light themes.
     /// Replaces MergedDictionaries[0] so all DynamicResource color keys
     /// pick up the new values immediately without restarting.
@@ -40,16 +48,18 @@ internal static class ThemeManager
             {
                 Source = new Uri(ThemeToSource(theme), UriKind.Relative)
             };
-            Settings.AppTheme = (byte)theme;
+            Settings.AppTheme = (int)theme;
         }
         catch { }
     }
 
     private static string ThemeToSource(Theme theme) => theme switch
     {
-        Theme.Dark  => "/Resources/Theme/Colors.Dark.xaml",
-        Theme.Light => "/Resources/Theme/Colors.Light.xaml",
-        _           => "/Resources/Theme/Colors.Light.xaml"
+        Theme.Dark     => "/Resources/Theme/Colors.Dark.xaml",
+        Theme.Classic  => "/Resources/Theme/Colors.Classic.xaml",
+        Theme.Fluent   => "/Resources/Theme/Colors.Fluent.xaml",
+        Theme.Eridanus => "/Resources/Theme/Colors.Eridanus.xaml",
+        _              => "/Resources/Theme/Colors.Light.xaml",
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -60,9 +70,9 @@ internal static class ThemeManager
     /// Sets the application accent color.
     ///
     /// <para>
-    /// A single <paramref name="color"/> drives four resource keys in
+    /// A single <paramref name="color"/> drives five resource keys in
     /// Controls.xaml so every control that reads AccentColor / AccentColorDark /
-    /// AccentColorLight / AccentForeground is automatically consistent:
+    /// AccentColorLight / AccentForeground / FocusBorder is automatically consistent:
     /// </para>
     /// <list type="bullet">
     ///   <item><b>AccentColor</b>       — the base color as supplied.</item>
@@ -73,6 +83,8 @@ internal static class ThemeManager
     ///   <item><b>AccentForeground</b>  — white when the accent is dark,
     ///         near-black when the accent is light, so text on accent
     ///         surfaces always passes contrast checks.</item>
+    ///   <item><b>FocusBorder</b>       — matches AccentColor so the focus
+    ///         ring is always visually coherent with the chosen accent.</item>
     /// </list>
     ///
     /// The persisted value is the 0x00RRGGBB integer stored in Settings.
@@ -87,6 +99,7 @@ internal static class ThemeManager
             controls["AccentColorDark"]  = new SolidColorBrush(Darken(color, 0.20f));
             controls["AccentColorLight"] = new SolidColorBrush(Lighten(color, 0.20f));
             controls["AccentForeground"] = new SolidColorBrush(ContrastForeground(color));
+            controls["FocusBorder"]      = new SolidColorBrush(color);
 
             // Persist only the base color (RGB — alpha not needed).
             Settings.AccentColor = RgbToInt(color.R, color.G, color.B);
@@ -101,12 +114,8 @@ internal static class ThemeManager
     /// </summary>
     internal static void RestoreAccentColor()
     {
-        var rgb   = Settings.AccentColor;
-        var color = Color.FromRgb(
-            (byte)((rgb >> 16) & 0xFF),
-            (byte)((rgb >>  8) & 0xFF),
-            (byte)( rgb        & 0xFF));
-        SetAccentColor(color);
+        var (r, g, b) = IntToRgb(Settings.AccentColor);
+        SetAccentColor(Color.FromRgb(r, g, b));
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -255,8 +264,11 @@ internal static class ThemeManager
 // Supporting types
 // ─────────────────────────────────────────────────────────────────────────────
 
-internal enum Theme : byte
+internal enum Theme
 {
-    Light = 0,
-    Dark  = 1
+    Light    = 0,
+    Dark     = 1,
+    Classic  = 2,
+    Fluent   = 3,
+    Eridanus = 4,
 }
