@@ -310,7 +310,10 @@
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{DynamicResource CornerNormal}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -369,7 +372,10 @@
                         Padding="{TemplateBinding Padding}"
                         Background="{TemplateBinding Background}"
                         CornerRadius="{DynamicResource CornerSmall}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -406,6 +412,53 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
+                    <Border
+                        x:Name="Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{DynamicResource CornerSmall}">
+                        <ScrollViewer
+                            x:Name="PART_ContentHost"
+                            Margin="{TemplateBinding Padding}"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentColorLight}" />
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ControlDisabled}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        ═══════════════════════════════════════════════════════════════════
+        PASSWORDBOX
+        ════════════════════════════════════════════════════════════════════
+    -->
+    <Style TargetType="PasswordBox">
+        <Setter Property="Background" Value="{DynamicResource InputBackground}" />
+        <Setter Property="Foreground" Value="{DynamicResource InputForeground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InputBorder}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="5,3" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource AccentColor}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="PasswordBox">
                     <Border
                         x:Name="Root"
                         Background="{TemplateBinding Background}"
@@ -481,6 +534,61 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+                            <Setter TargetName="Box" Property="Background" Value="{DynamicResource ControlDisabled}" />
+                            <Setter TargetName="Box" Property="BorderBrush" Value="{DynamicResource ControlDisabledBorder}" />
+                            <Setter TargetName="Check" Property="Stroke" Value="{DynamicResource TextDisabled}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--
+        ═══════════════════════════════════════════════════════════════════
+        RADIOBUTTON
+        ════════════════════════════════════════════════════════════════════
+    -->
+    <Style TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSizeNormal}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Grid Width="14" Height="14">
+                            <Ellipse
+                                x:Name="Outer"
+                                Fill="{DynamicResource ControlBackground}"
+                                Stroke="{DynamicResource ControlBorder}"
+                                StrokeThickness="1" />
+                            <Ellipse
+                                x:Name="Inner"
+                                Width="6"
+                                Height="6"
+                                Fill="{DynamicResource AccentColor}"
+                                Visibility="Collapsed" />
+                        </Grid>
+                        <ContentPresenter
+                            Margin="6,0,0,0"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Inner" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="Outer" Property="Stroke" Value="{DynamicResource AccentColor}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Outer" Property="Stroke" Value="{DynamicResource AccentColorLight}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+                            <Setter TargetName="Outer" Property="Stroke" Value="{DynamicResource ControlDisabledBorder}" />
+                            <Setter TargetName="Inner" Property="Fill" Value="{DynamicResource TextDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -515,6 +623,9 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Root" Property="Background" Value="{DynamicResource ListItemSelected}" />
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -534,6 +645,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
                     <Grid>
+
+                        <!--  Visual shell: border + selected-item display + arrow  -->
                         <Border
                             x:Name="Root"
                             Background="{TemplateBinding Background}"
@@ -550,27 +663,50 @@
                                     Margin="{TemplateBinding Padding}"
                                     VerticalAlignment="Center"
                                     Content="{TemplateBinding SelectionBoxItem}"
-                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" />
+                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                    IsHitTestVisible="False" />
                                 <Path
+                                    x:Name="Arrow"
                                     Grid.Column="1"
                                     Width="10"
                                     Height="6"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Data="M 0,0 L 5,5 L 10,0"
+                                    IsHitTestVisible="False"
                                     Stretch="Fill"
                                     Stroke="{DynamicResource TextSecondary}"
                                     StrokeThickness="1.5" />
                             </Grid>
                         </Border>
+
+                        <!--
+                            Transparent toggle button layered on top.
+                            IsChecked ↔ IsDropDownOpen (TwoWay) is the reliable
+                            open/close driver — avoids relying on the ComboBox's
+                            built-in OnMouseLeftButtonDown which is fragile with
+                            fully custom templates.
+                        -->
+                        <ToggleButton
+                            Focusable="False"
+                            IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="Transparent" />
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
                         <Popup
                             x:Name="PART_Popup"
                             AllowsTransparency="True"
+                            DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                             IsOpen="{TemplateBinding IsDropDownOpen}"
                             Placement="Bottom"
-                            PlacementTarget="{Binding ElementName=Root}">
+                            PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                            StaysOpen="False">
                             <Border
-                                MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                MinWidth="{Binding ActualWidth}"
                                 Background="{DynamicResource SubMenuBackground}"
                                 BorderBrush="{DynamicResource SubMenuBorder}"
                                 BorderThickness="1"
@@ -580,6 +716,7 @@
                                 </ScrollViewer>
                             </Border>
                         </Popup>
+
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -587,6 +724,12 @@
                         </Trigger>
                         <Trigger Property="IsDropDownOpen" Value="True">
                             <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ControlDisabled}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource ControlDisabledBorder}" />
+                            <Setter TargetName="Arrow" Property="Stroke" Value="{DynamicResource TextDisabled}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -665,9 +808,12 @@
                                 Grid.Column="1"
                                 VerticalAlignment="Center"
                                 ContentSource="Header"
-                                RecognizesAccessKey="True" />
+                                RecognizesAccessKey="True"
+                                TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                TextElement.Foreground="{TemplateBinding Foreground}" />
 
                             <TextBlock
+                                x:Name="GestureText"
                                 Grid.Column="2"
                                 Margin="16,0,8,0"
                                 VerticalAlignment="Center"
@@ -727,6 +873,7 @@
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource TextDisabled}" />
+                            <Setter TargetName="GestureText" Property="Foreground" Value="{DynamicResource TextDisabled}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -924,16 +1071,58 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ProgressBar">
                     <Border
+                        x:Name="PART_Track"
+                        ClipToBounds="True"
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{DynamicResource CornerNormal}">
-                        <Border
-                            x:Name="PART_Indicator"
-                            HorizontalAlignment="Left"
-                            Background="{TemplateBinding Foreground}"
-                            CornerRadius="{DynamicResource CornerNormal}" />
+                        <Grid>
+                            <Border
+                                x:Name="PART_Indicator"
+                                HorizontalAlignment="Left"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="{DynamicResource CornerNormal}" />
+                            <Border
+                                x:Name="IndeterminateIndicator"
+                                Width="0.4"
+                                HorizontalAlignment="Left"
+                                Background="{TemplateBinding Foreground}"
+                                CornerRadius="{DynamicResource CornerNormal}"
+                                RenderTransformOrigin="0,0.5"
+                                Visibility="Collapsed">
+                                <Border.RenderTransform>
+                                    <ScaleTransform x:Name="IndeterminateScale" ScaleX="0.05" />
+                                </Border.RenderTransform>
+                            </Border>
+                        </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate" Value="True">
+                            <Setter TargetName="PART_Indicator" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="IndeterminateIndicator" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="IndeterminateIndicator" Property="Width" Value="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="IndeterminateAnimation">
+                                    <Storyboard RepeatBehavior="Forever" AutoReverse="True">
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="IndeterminateScale"
+                                            Storyboard.TargetProperty="ScaleX"
+                                            From="0.05"
+                                            To="0.95"
+                                            Duration="0:0:1.2">
+                                            <DoubleAnimation.EasingFunction>
+                                                <SineEase EasingMode="EaseInOut" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="IndeterminateAnimation" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

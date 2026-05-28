@@ -1,0 +1,104 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ═══════════════════════════════════════════════════
+         FLUENT THEME — Windows 11 / WinUI 3 Inspired
+         Large rounded corners, subtle depth, near-white surfaces.
+    ════════════════════════════════════════════════════ -->
+
+    <!-- Corner radii — large, Win11 pill style -->
+    <CornerRadius x:Key="CornerSmall">4</CornerRadius>
+    <CornerRadius x:Key="CornerNormal">8</CornerRadius>
+    <CornerRadius x:Key="CornerLarge">12</CornerRadius>
+
+    <!-- Window / Shell -->
+    <SolidColorBrush x:Key="WindowBackground"         Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="WindowBorder"             Color="#E0E0E0"/>
+
+    <!-- Sidebar / Panel (Mica-like) -->
+    <SolidColorBrush x:Key="SidebarBackground"        Color="#EBEBEB"/>
+    <SolidColorBrush x:Key="SidebarBorder"            Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="SidebarItemHover"         Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="SidebarItemSelected"      Color="#D8D8D8"/>
+
+    <!-- Title Bar -->
+    <SolidColorBrush x:Key="TitleBarBackground"       Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="TitleBarForeground"       Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="TitleBarButtonHover"      Color="#E8E8E8"/>
+    <SolidColorBrush x:Key="TitleBarButtonClose"      Color="#C42B1C"/>
+
+    <!-- Menu Bar -->
+    <SolidColorBrush x:Key="MenuBackground"           Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="MenuBorder"               Color="#E8E8E8"/>
+    <SolidColorBrush x:Key="MenuItemBackground"       Color="Transparent"/>
+    <SolidColorBrush x:Key="MenuItemHover"            Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="MenuItemForeground"       Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="MenuSeparator"            Color="#E8E8E8"/>
+    <SolidColorBrush x:Key="SubMenuBackground"        Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SubMenuBorder"            Color="#E0E0E0"/>
+
+    <!-- Toolbar / Breadcrumb -->
+    <SolidColorBrush x:Key="ToolbarBackground"        Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="ToolbarBorder"            Color="#E8E8E8"/>
+    <SolidColorBrush x:Key="BreadcrumbForeground"     Color="#5C5C5C"/>
+    <SolidColorBrush x:Key="BreadcrumbSeparator"      Color="#C0C0C0"/>
+
+    <!-- Content Area -->
+    <SolidColorBrush x:Key="ContentBackground"        Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ContentBorder"            Color="#E8E8E8"/>
+
+    <!-- List / Grid -->
+    <SolidColorBrush x:Key="ListBackground"           Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ListItemBackground"       Color="Transparent"/>
+    <SolidColorBrush x:Key="ListItemHover"            Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="ListItemSelected"         Color="#E0EEF9"/>
+    <SolidColorBrush x:Key="ListItemSelectedFocus"    Color="#CCE4F7"/>
+    <SolidColorBrush x:Key="ListHeaderBackground"     Color="#F9F9F9"/>
+    <SolidColorBrush x:Key="ListHeaderBorder"         Color="#E8E8E8"/>
+    <SolidColorBrush x:Key="ListHeaderForeground"     Color="#5C5C5C"/>
+    <SolidColorBrush x:Key="ListSeparator"            Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="ListGridLine"             Color="#F5F5F5"/>
+
+    <!-- Status Bar -->
+    <SolidColorBrush x:Key="StatusBarBackground"      Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="StatusBarForeground"      Color="#5C5C5C"/>
+    <SolidColorBrush x:Key="StatusBarBorder"          Color="#E8E8E8"/>
+
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimary"              Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="TextSecondary"            Color="#5C5C5C"/>
+    <SolidColorBrush x:Key="TextDisabled"             Color="#AAAAAA"/>
+
+    <!-- Controls -->
+    <SolidColorBrush x:Key="ControlBackground"        Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ControlBorder"            Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="ControlHover"             Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="ControlPressed"           Color="#EEEEEE"/>
+    <SolidColorBrush x:Key="ControlDisabled"          Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="ControlDisabledBorder"    Color="#EEEEEE"/>
+
+    <!-- Scrollbar -->
+    <SolidColorBrush x:Key="ScrollbarTrack"           Color="#F0F0F0"/>
+    <SolidColorBrush x:Key="ScrollbarThumb"           Color="#C0C0C0"/>
+    <SolidColorBrush x:Key="ScrollbarThumbHover"      Color="#A8A8A8"/>
+    <SolidColorBrush x:Key="ScrollbarThumbPressed"    Color="#909090"/>
+
+    <!-- Input -->
+    <SolidColorBrush x:Key="InputBackground"          Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="InputBorder"              Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="InputForeground"          Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="InputPlaceholder"         Color="#AAAAAA"/>
+
+    <!-- Tooltip -->
+    <SolidColorBrush x:Key="TooltipBackground"        Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TooltipBorder"            Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="TooltipForeground"        Color="#1C1C1C"/>
+
+    <!-- Section Headers -->
+    <SolidColorBrush x:Key="GroupHeaderForeground"    Color="#5C5C5C"/>
+
+    <!-- Overlay / Modal -->
+    <SolidColorBrush x:Key="OverlayBackground"        Color="#60000000"/>
+
+
+</ResourceDictionary>

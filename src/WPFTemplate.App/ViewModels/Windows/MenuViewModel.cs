@@ -1,5 +1,3 @@
-using System.Windows.Shapes;
-
 using WPFTemplate.App.Command;
 using WPFTemplate.App.Services;
 using WPFTemplate.App.ViewModels.Pages;
@@ -10,8 +8,13 @@ namespace WPFTemplate.App.ViewModels.Windows;
 internal class MenuViewModel
 {
     private readonly NavigationService _navigation;
+    private readonly IWindowService _windows;
 
-    public MenuViewModel(NavigationService navigation) => _navigation = navigation;
+    public MenuViewModel(NavigationService navigation, IWindowService windows)
+    {
+        _navigation = navigation;
+        _windows = windows;
+    }
 
     public ICommand ExitCommand =>
         field ??= new RelayCommand(_ => Application.Current.Shutdown());
@@ -23,8 +26,7 @@ internal class MenuViewModel
         field ??= new RelayCommand(_ => _navigation.NavigateTo<LogPageViewModel>());
 
     public ICommand ShowAboutCommand =>
-        field ??= new RelayCommand(_ =>
-            new AboutWindow { Owner = Application.Current.MainWindow }.ShowDialog());
+        field ??= new RelayCommand(_ => _windows.ShowDialog<AboutWindow>());
 
     public IEnumerable<CommandViewModel> SetThemeCommands =>
         field ??= BuildThemeCommands();
@@ -47,8 +49,7 @@ internal class MenuViewModel
             cmd = new CommandViewModel(name, _ =>
             {
                 ThemeManager.SetTheme(t);
-                foreach (var c in cmds)
-                    c.IsActive = false;
+                foreach (var x in cmds) x.IsActive = false;
                 cmd.IsActive = true;
             });
             cmd.IsActive = (Theme)Settings.AppTheme == t;
@@ -58,9 +59,8 @@ internal class MenuViewModel
         return cmds;
     }
 
-
-    private List<CommandViewModel>? _setAccentColorCommands;
-    public IEnumerable<CommandViewModel> SetAccentColorCommands => _setAccentColorCommands ??= BuildAccentColorCommands();
+    public IEnumerable<CommandViewModel> SetAccentColorCommands =>
+        field ??= BuildAccentColorCommands();
 
     private static List<CommandViewModel> BuildAccentColorCommands()
     {
@@ -81,21 +81,11 @@ internal class MenuViewModel
         })
         {
             var c = color;
-            var icon = new Rectangle
-            {
-                Fill = new SolidColorBrush(c),
-                RadiusX = 2,
-                RadiusY = 2,
-                Width = 12,
-                Height = 12
-            };
-
             CommandViewModel cmd = null!;
-            cmd = new CommandViewModel(name, icon, _ =>
+            cmd = new CommandViewModel(name, c, _ =>
             {
                 ThemeManager.SetAccentColor(c);
-                foreach (var x in cmds)
-                    x.IsActive = false;
+                foreach (var x in cmds) x.IsActive = false;
                 cmd.IsActive = true;
             });
             cmd.IsActive = RgbToInt(c.R, c.G, c.B) == Settings.AccentColor;
@@ -107,10 +97,10 @@ internal class MenuViewModel
 
     // ── Settings / Font ───────────────────────────────────────────────────────
 
-    private List<CommandViewModel>? _setFontCommands;
-    public IEnumerable<CommandViewModel> SetFontCommands => _setFontCommands ??= BuildFontCommands();
+    public IEnumerable<CommandViewModel> SetFontCommands =>
+        field ??= BuildFontCommands();
 
-    private List<CommandViewModel> BuildFontCommands()
+    private static List<CommandViewModel> BuildFontCommands()
     {
         List<CommandViewModel> cmds = [];
 
@@ -133,8 +123,7 @@ internal class MenuViewModel
             cmd = new CommandViewModel(n, _ =>
             {
                 ThemeManager.SetFont(new FontFamily(n));
-                foreach (var c in cmds)
-                    c.IsActive = false;
+                foreach (var c in cmds) c.IsActive = false;
                 cmd.IsActive = true;
             });
             cmd.IsActive = n.Equals(currentFont, StringComparison.OrdinalIgnoreCase);

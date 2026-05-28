@@ -1,5 +1,7 @@
 using System.Windows.Threading;
 
+using Microsoft.Data.SqlClient;
+
 using WPFTemplate.App.Services;
 using WPFTemplate.App.ViewModels.Pages;
 using WPFTemplate.App.ViewModels.Windows;
@@ -35,11 +37,13 @@ public partial class App : Application
                 o.RootPath = AppContext.BaseDirectory;
                 o.Files = [new LogFileOptions { Path = "app.log" }];
             }))
+            .AddSingleton<IWindowService, WindowService>()
             .AddSingleton<NavigationService>()
-            .AddTransient<MenuViewModel>()
-            .AddTransient<HomePageViewModel>()
-            .AddTransient<LogPageViewModel>()
-            .AddTransient<MainWindowViewModel>()
+            .AddSingleton<MenuViewModel>()
+            .AddSingleton<HomePageViewModel>()
+            .AddSingleton<LogPageViewModel>()
+            .AddSingleton<MainWindowViewModel>()
+            .AddTransient<AboutWindow>()
             .BuildServiceProvider();
 
         DispatcherUnhandledException += OnDispatcherUnhandledException;
@@ -50,7 +54,7 @@ public partial class App : Application
     {
         var connStr = ServiceProvider.GetRequiredService<IConfiguration>()["Database:ConnectionString"];
         if (!string.IsNullOrWhiteSpace(connStr))
-            Db.Configure(connStr);
+            Db.Configure(() => new SqlConnection(connStr));
 
         ThemeManager.InitializeTheme();
         await InitializeWindows();
@@ -80,7 +84,6 @@ public partial class App : Application
     {
         LogAndShow(e.Exception);
         e.Handled = true;
-        Shutdown(1);
     }
 
     private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -89,7 +92,7 @@ public partial class App : Application
             LogAndShow(ex);
     }
 
-    private void LogAndShow(Exception ex)
+    private static void LogAndShow(Exception ex)
     {
         try { ServiceProvider.GetService<ILogger<App>>()?.LogCritical(ex, "Unhandled exception"); }
         catch { }

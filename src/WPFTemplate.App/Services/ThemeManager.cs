@@ -1,4 +1,5 @@
-using System.Windows.Media;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace WPFTemplate.App.Services;
 
@@ -50,16 +51,19 @@ internal static class ThemeManager
             };
             Settings.AppTheme = (int)theme;
         }
-        catch { }
+        catch (Exception ex)
+        {
+            App.ServiceProvider.GetService<ILogger<App>>()?.LogError(ex, "App theme could not be set");
+        }
     }
 
     private static string ThemeToSource(Theme theme) => theme switch
     {
-        Theme.Dark     => "/Resources/Theme/Colors.Dark.xaml",
-        Theme.Classic  => "/Resources/Theme/Colors.Classic.xaml",
-        Theme.Fluent   => "/Resources/Theme/Colors.Fluent.xaml",
+        Theme.Dark => "/Resources/Theme/Colors.Dark.xaml",
+        Theme.Classic => "/Resources/Theme/Colors.Classic.xaml",
+        Theme.Fluent => "/Resources/Theme/Colors.Fluent.xaml",
         Theme.Eridanus => "/Resources/Theme/Colors.Eridanus.xaml",
-        _              => "/Resources/Theme/Colors.Light.xaml",
+        _ => "/Resources/Theme/Colors.Light.xaml",
     };
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -95,16 +99,19 @@ internal static class ThemeManager
         {
             var controls = ControlsDict();
 
-            controls["AccentColor"]      = new SolidColorBrush(color);
-            controls["AccentColorDark"]  = new SolidColorBrush(Darken(color, 0.20f));
+            controls["AccentColor"] = new SolidColorBrush(color);
+            controls["AccentColorDark"] = new SolidColorBrush(Darken(color, 0.20f));
             controls["AccentColorLight"] = new SolidColorBrush(Lighten(color, 0.20f));
             controls["AccentForeground"] = new SolidColorBrush(ContrastForeground(color));
-            controls["FocusBorder"]      = new SolidColorBrush(color);
+            controls["FocusBorder"] = new SolidColorBrush(color);
 
             // Persist only the base color (RGB — alpha not needed).
             Settings.AccentColor = RgbToInt(color.R, color.G, color.B);
         }
-        catch { }
+        catch (Exception ex)
+        {
+            App.ServiceProvider.GetService<ILogger<App>>()?.LogError(ex, "Accent color could not be set");
+        }
     }
 
     /// <summary>
@@ -153,7 +160,10 @@ internal static class ThemeManager
             ControlsDict()["DefaultFont"] = font;
             Settings.FontFamily = font.Source;
         }
-        catch { }
+        catch (Exception ex)
+        {
+            App.ServiceProvider.GetService<ILogger<App>>()?.LogError(ex, "Font could not be set");
+        }
     }
 
     /// <summary>
@@ -167,20 +177,6 @@ internal static class ThemeManager
             SetFont(new FontFamily(name));
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Color picker placeholder
-    // ─────────────────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Opens a color-picker dialog and, if the user confirms, calls
-    /// <see cref="SetAccentColor"/> with the chosen color.
-    /// Implement the dialog here when the UI component is ready.
-    /// </summary>
-    internal static void ChooseAccentColor()
-    {
-        // TODO: open a color-picker Window / dialog here.
-        // On confirm:  SetAccentColor(pickedColor);
-    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // Private helpers
@@ -196,9 +192,9 @@ internal static class ThemeManager
     /// </summary>
     private static Color Darken(Color color, float amount)
     {
-        float r = color.R / 255f;
-        float g = color.G / 255f;
-        float b = color.B / 255f;
+        var r = color.R / 255f;
+        var g = color.G / 255f;
+        var b = color.B / 255f;
 
         r = Clamp01(r - amount * r);
         g = Clamp01(g - amount * g);
@@ -216,9 +212,9 @@ internal static class ThemeManager
     /// </summary>
     private static Color Lighten(Color color, float amount)
     {
-        float r = color.R / 255f;
-        float g = color.G / 255f;
-        float b = color.B / 255f;
+        var r = color.R / 255f;
+        var g = color.G / 255f;
+        var b = color.B / 255f;
 
         r = Clamp01(r + (1f - r) * amount);
         g = Clamp01(g + (1f - g) * amount);
@@ -238,10 +234,10 @@ internal static class ThemeManager
     private static Color ContrastForeground(Color color)
     {
         // Relative luminance per WCAG 2.1 §1.4.3
-        double r = LinearChannel(color.R);
-        double g = LinearChannel(color.G);
-        double b = LinearChannel(color.B);
-        double L  = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        var r = LinearChannel(color.R);
+        var g = LinearChannel(color.G);
+        var b = LinearChannel(color.B);
+        var L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
         // Threshold: white on anything darker than medium gray
         return L < 0.35
@@ -251,7 +247,7 @@ internal static class ThemeManager
 
     private static double LinearChannel(byte c)
     {
-        double sRgb = c / 255.0;
+        var sRgb = c / 255.0;
         return sRgb <= 0.04045
             ? sRgb / 12.92
             : Math.Pow((sRgb + 0.055) / 1.055, 2.4);
@@ -266,9 +262,9 @@ internal static class ThemeManager
 
 internal enum Theme
 {
-    Light    = 0,
-    Dark     = 1,
-    Classic  = 2,
-    Fluent   = 3,
+    Light = 0,
+    Dark = 1,
+    Classic = 2,
+    Fluent = 3,
     Eridanus = 4,
 }

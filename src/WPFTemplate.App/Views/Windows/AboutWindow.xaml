@@ -1,0 +1,35 @@
+<Window
+    x:Class="WPFTemplate.App.Views.Windows.AboutWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="About WPFTemplate"
+    Width="480"
+    Height="300"
+    ResizeMode="NoResize"
+    Style="{DynamicResource WindowStyle}"
+    WindowStartupLocation="CenterOwner"
+    WindowStyle="ToolWindow">
+
+    <DockPanel Margin="28,24,28,20">
+
+        <Button
+            Width="80"
+            HorizontalAlignment="Right"
+            Click="OnCloseClick"
+            Content="Close"
+            DockPanel.Dock="Bottom" />
+
+        <TextBlock
+            Margin="0,0,0,14"
+            DockPanel.Dock="Top"
+            FontSize="{StaticResource FontSizeLarge}"
+            Text="WPFTemplate" />
+
+        <TextBlock
+            Foreground="{DynamicResource TextSecondary}"
+            LineHeight="22"
+            Text="WPFTemplate is a reusable starting point for WPF applications targeting .NET 10. It ships with Microsoft.Extensions.DependencyInjection for dependency injection, hand-rolled MVVM infrastructure (ObservableObject, RelayCommand), a runtime theming system with multiple built-in themes and accent colour support, file-based logging via Karambolo, JSON user-settings persistence, and a ViewModel-first navigation service. The goal is to eliminate boilerplate so you can focus on building features from day one."
+            TextWrapping="Wrap" />
+
+    </DockPanel>
+</Window>

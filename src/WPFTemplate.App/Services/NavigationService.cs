@@ -1,6 +1,9 @@
 using System.ComponentModel;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols;
+
+using WPFTemplate.App.ViewModels.Base;
 
 namespace WPFTemplate.App.Services;
 
@@ -9,7 +12,7 @@ namespace WPFTemplate.App.Services;
 /// Bind <see cref="CurrentView"/> to a <c>ContentControl</c> and add a
 /// <c>DataTemplate</c> per page ViewModel in App.xaml to wire up the views.
 /// </summary>
-internal class NavigationService : INotifyPropertyChanged
+internal class NavigationService : ObservableObject
 {
     private readonly IServiceProvider _services;
 
@@ -18,21 +21,13 @@ internal class NavigationService : INotifyPropertyChanged
         _services = services;
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     /// <summary>
     /// The currently active page ViewModel. Bind a <c>ContentControl.Content</c> to this.
     /// </summary>
     public object? CurrentView
     {
         get => field;
-        private set
-        {
-            if (field == value)
-                return;
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentView)));
-        }
+        private set => SetProperty(ref field, value);
     }
 
     /// <summary>

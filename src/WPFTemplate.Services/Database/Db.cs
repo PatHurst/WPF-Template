@@ -1,7 +1,7 @@
+using System.Data.Common;
+
 using LanguageExt;
 using LanguageExt.Common;
-
-using Microsoft.Data.SqlClient;
 
 using static LanguageExt.Prelude;
 
@@ -9,7 +9,7 @@ namespace WPFTemplate.Services.Database;
 
 /// <summary>
 /// Core database infrastructure providing connection and transaction management
-/// for SQL Express using a functional-style <see cref="Either{L,R}"/> error model.
+/// using a functional-style <see cref="Either{L,R}"/> error model.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -22,39 +22,36 @@ namespace WPFTemplate.Services.Database;
 /// <para>
 /// Configure once at application startup via <see cref="Configure"/>:
 /// <code>
-/// Db.Configure(@"Server=.\SQLEXPRESS;Database=MyDb;Trusted_Connection=True;TrustServerCertificate=True;");
+/// Db.Configure(() => new SqlConnection(@"Server=.\SQLEXPRESS;Database=MyDb;Trusted_Connection=True;TrustServerCertificate=True;"));
 /// </code>
 /// </para>
 /// </remarks>
 public static class Db
 {
-    /// <summary>
-    /// Gets the ADO.NET connection string used for all database operations.
-    /// Set this once at startup via <see cref="Configure"/>.
-    /// </summary>
-    public static string ConnectionString { get; private set; } = string.Empty;
+    private static Func<DbConnection>? _factory;
 
     /// <summary>
-    /// Configures the connection string used by all database operations.
+    /// Configures the connection factory used by all database operations.
     /// Call this once during application startup before any queries are made.
     /// </summary>
-    /// <param name="connectionString">
-    /// A valid SQL Server / SQL Express connection string. Example:
-    /// <c>Server=.\SQLEXPRESS;Database=MyDb;Trusted_Connection=True;TrustServerCertificate=True;</c>
+    /// <param name="factory">
+    /// A delegate that returns a new, unopened <see cref="DbConnection"/>.
+    /// The caller supplies the provider — the database layer is provider-agnostic.
+    /// Example: <c>Db.Configure(() => new SqlConnection(connStr))</c>
     /// </param>
     /// <exception cref="ArgumentNullException">
-    /// Thrown if <paramref name="connectionString"/> is null or empty.
+    /// Thrown if <paramref name="factory"/> is null.
     /// </exception>
-    public static void Configure(string connectionString)
-    {
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new ArgumentNullException(nameof(connectionString), "Connection string must not be null or empty.");
+    public static void Configure(Func<DbConnection> factory) =>
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
-        ConnectionString = connectionString;
-    }
+    private static Func<DbConnection> GetFactory() =>
+        _factory ?? throw new InvalidOperationException(
+            "Db has not been configured. Call Db.Configure(factory) during application startup " +
+            "before issuing any database operations.");
 
     /// <summary>
-    /// Opens a pooled <see cref="SqlConnection"/>, executes the provided asynchronous
+    /// Opens a pooled <see cref="DbConnection"/>, executes the provided asynchronous
     /// function, then disposes the connection. Any exception is caught and returned
     /// as a <see cref="Left{Error}"/> rather than being re-thrown.
     /// </summary>
@@ -66,7 +63,7 @@ public static class Db
     /// </param>
     /// <returns>
     /// <c>Right(T)</c> on success, or <c>Left(Error)</c> if an exception was thrown
-    /// at any point (including <c>OpenAsync</c>).
+    /// at any point (including <c>OpenAsync</c> or an unconfigured factory).
     /// </returns>
     /// <example>
     /// <code>
@@ -75,11 +72,11 @@ public static class Db
     /// </code>
     /// </example>
     public static async Task<Either<Error, T>> WithConnection<T>(
-        Func<SqlConnection, Task<Either<Error, T>>> f)
+        Func<DbConnection, Task<Either<Error, T>>> f)
     {
         try
         {
-            await using var conn = new SqlConnection(ConnectionString);
+            await using var conn = GetFactory()();
             await conn.OpenAsync();
             return await f(conn);
         }
@@ -90,7 +87,7 @@ public static class Db
     }
 
     /// <summary>
-    /// Opens a pooled <see cref="SqlConnection"/>, begins a <see cref="SqlTransaction"/>,
+    /// Opens a pooled <see cref="DbConnection"/>, begins a <see cref="DbTransaction"/>,
     /// executes the provided asynchronous function, and then either commits or rolls back
     /// the transaction based on whether the result is <c>Right</c> or <c>Left</c>.
     /// </summary>
@@ -124,13 +121,13 @@ public static class Db
     /// </code>
     /// </example>
     public static async Task<Either<Error, T>> WithTransaction<T>(
-        Func<SqlConnection, SqlTransaction, Task<Either<Error, T>>> f)
+        Func<DbConnection, DbTransaction, Task<Either<Error, T>>> f)
     {
         try
         {
-            await using var conn = new SqlConnection(ConnectionString);
+            await using var conn = GetFactory()();
             await conn.OpenAsync();
-            await using var tx = conn.BeginTransaction();
+            await using var tx = await conn.BeginTransactionAsync();
 
             var result = await f(conn, tx);
 
